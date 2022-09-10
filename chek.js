@@ -13,35 +13,39 @@ import Task from "./components/Task";
 
 export default function App() {
   const [task, setTask] = useState();
-  const [taskItems, settaskItems] = useState([]);
+  const [taskItems, setTaskItems] = useState([]);
 
   const handleAddTask = () => {
     Keyboard.dismiss();
-    settaskItems([...taskItems, task]);
+    setTaskItems([...taskItems, task]);
     setTask(null);
   };
 
-  const complateTask = (index) => {
+  const completeTask = (index) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
-    settaskItems(itemsCopy);
+    setTaskItems(itemsCopy);
   };
+
   return (
     <View style={styles.container}>
+      {/* Added this scroll view to enable scrolling when list gets longer than the page */}
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
         }}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Today's Tasks */}
         <View style={styles.tasksWrapper}>
-          <Text style={styles.sectionTitle}>Today's tasks </Text>
-          <View style={styles.item}>
+          <Text style={styles.sectionTitle}>Today's tasks</Text>
+          <View style={styles.items}>
+            {/* This is where the tasks will go! */}
             {taskItems.map((item, index) => {
               return (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => complateTask(index)}
+                  onPress={() => completeTask(index)}
                 >
                   <Task text={item} />
                 </TouchableOpacity>
@@ -50,13 +54,16 @@ export default function App() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Write a task */}
+      {/* Uses a keyboard avoiding view which ensures the keyboard does not cover the items on screen */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeTaskWrapper}
       >
         <TextInput
           style={styles.input}
-          placeholder={"write a task..."}
+          placeholder={"Write a task"}
           value={task}
           onChangeText={(text) => setTask(text)}
         />
@@ -83,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
   },
-  item: {
+  items: {
     marginTop: 30,
   },
   writeTaskWrapper: {
@@ -95,7 +102,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    // padding: 15,
     paddingVertical: 15,
     paddingHorizontal: 15,
     backgroundColor: "#FFF",
@@ -107,7 +113,7 @@ const styles = StyleSheet.create({
   addWrapper: {
     width: 60,
     height: 60,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
     borderRadius: 60,
     justifyContent: "center",
     alignItems: "center",
